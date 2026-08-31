@@ -1,0 +1,11 @@
+#ifndef SYSTEM_CONFIG_H
+#define SYSTEM_CONFIG_H
+
+#define SYSTEM_RF_MAX_PAYLOAD_LENGTH         (255U)
+#define SYSTEM_RS485_BAUD_RATE               (9600U)
+#define SYSTEM_RS485_TX_DRAIN_RETRIES        (8192U)
+#define SYSTEM_MAIN_THREAD_STACK_SIZE        (2048U)
+#define SYSTEM_MAIN_THREAD_PRIORITY          (1)
+#define SYSTEM_FATAL_SLEEP_TICKS             (1000U)
+
+#endif

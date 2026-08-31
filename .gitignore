@@ -1,0 +1,43 @@
+# CCS / TI ARM Compiler build output
+/Debug/
+/Release/
+**/configPkg/
+*.obj
+*.d
+*.d_raw
+*.out
+*.hex
+*.bin
+*.map
+*.x1
+*.x2
+*.x3
+*_linkInfo.xml
+**/ccsObjs.opt
+**/objects.mk
+**/sources.mk
+**/subdir_rules.mk
+**/subdir_vars.mk
+
+# CCS Theia / clangd local indexes and caches
+/.clangd
+**/.clangd/
+**/.cache/
+compile_commands.json
+*.idx
+/.metadata/
+/.theia/
+/.vscode/
+
+# Local logs and temporary files
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+
+# Windows and macOS metadata
+Thumbs.db
+Desktop.ini
+.DS_Store
