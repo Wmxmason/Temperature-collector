@@ -8,6 +8,7 @@
 
 #define COLLECTOR_FRAME_MAX_LENGTH           \
     SYSTEM_RF_MAX_PAYLOAD_LENGTH
+#define COLLECTOR_TEMPERATURE_REQUEST_LENGTH (6U)
 
 typedef struct
 {
@@ -28,5 +29,19 @@ typedef struct
 bool collector_frame_prepare(const uint8_t *data,
                              uint16_t length,
                              collector_frame_t *frame);
+
+/**
+ * @brief 构造广播温度上报请求
+ *
+ * @param data 请求帧输出缓冲区
+ * @param capacity 输出缓冲区容量
+ * @param length 实际请求帧长度输出地址
+ *
+ * @return 构造成功返回true，否则返回false
+ * @note 帧格式为FF FF FF 00 CRC低 CRC高，CRC仅覆盖4字节数据域
+ */
+bool collector_frame_build_temperature_request(uint8_t *data,
+                                               uint16_t capacity,
+                                               uint16_t *length);
 
 #endif

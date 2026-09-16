@@ -92,9 +92,35 @@ bool rf_receiver_init(void)
     return true;
 }
 
+bool rf_receiver_send(const uint8_t *data, uint16_t length)
+{
+    RF_EventMask events;
+
+    if ((data == NULL) ||
+        (length == 0U) ||
+        (length > RF_RECEIVER_MAX_PAYLOAD_LENGTH) ||
+        (rf_handle == NULL))
+    {
+        return false;
+    }
+
+    RF_cmdPropTx.status = 0U;
+    RF_cmdPropTx.pktLen = (uint8_t)length;
+    RF_cmdPropTx.pPkt = (uint8_t *)data;
+    events = RF_runCmd(rf_handle,
+                       (RF_Op *)&RF_cmdPropTx,
+                       RF_PriorityNormal,
+                       NULL,
+                       0U);
+
+    return ((events & RF_EventLastCmdDone) != 0U) &&
+           (RF_cmdPropTx.status == PROP_DONE_OK);
+}
+
 bool rf_receiver_read(uint8_t *data,
                       uint16_t capacity,
-                      uint16_t *length)
+                      uint16_t *length,
+                      uint32_t timeout_ms)
 {
     rfc_dataEntryGeneral_t *entry;
     uint8_t *received_data;
@@ -110,12 +136,15 @@ bool rf_receiver_read(uint8_t *data,
     if ((data == NULL) ||
         (capacity == 0U) ||
         (length == NULL) ||
+        (timeout_ms == 0U) ||
         (rf_handle == NULL))
     {
         return false;
     }
 
     RF_cmdPropRx.status = 0U;
+    RF_cmdPropRx.endTrigger.triggerType = TRIG_REL_START;
+    RF_cmdPropRx.endTime = RF_convertMsToRatTicks(timeout_ms);
     events = RF_runCmd(rf_handle,
                        (RF_Op *)&RF_cmdPropRx,
                        RF_PriorityNormal,
