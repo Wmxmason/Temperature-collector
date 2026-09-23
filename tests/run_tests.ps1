@@ -2,11 +2,14 @@ $ErrorActionPreference = 'Stop'
 
 $project_root = Split-Path -Parent $PSScriptRoot
 $test_output = Join-Path $env:TEMP 'rf_collector_frame_test.exe'
+$ring_test_output = Join-Path $env:TEMP 'rf_collector_ring_buffer_test.exe'
 
 $required_files = @(
     'Bsp\Inc\collector_app.h',
+    'Bsp\Inc\collector_ring_buffer.h',
     'Bsp\Inc\rs485.h',
     'Bsp\Src\collector_app.c',
+    'Bsp\Src\collector_ring_buffer.c',
     'Bsp\Src\rs485.c',
     'Core\Inc\rf_receiver.h',
     'Core\Src\rf_receiver.c',
@@ -57,5 +60,27 @@ if ($LASTEXITCODE -ne 0)
     throw 'collector_frame unit test failed'
 }
 
+& 'C:\mingw64\bin\gcc.exe' `
+    '-std=c99' `
+    '-Wall' `
+    '-Wextra' `
+    '-Werror' `
+    "-I$(Join-Path $project_root 'Bsp\Inc')" `
+    (Join-Path $project_root 'Bsp\Src\collector_ring_buffer.c') `
+    (Join-Path $PSScriptRoot 'test_collector_ring_buffer.c') `
+    '-o' $ring_test_output
+
+if ($LASTEXITCODE -ne 0)
+{
+    throw 'collector_ring_buffer unit test build failed'
+}
+
+& $ring_test_output
+if ($LASTEXITCODE -ne 0)
+{
+    throw 'collector_ring_buffer unit test failed'
+}
+
 Write-Output 'COLLECTOR_FRAME_TESTS_OK'
+Write-Output 'COLLECTOR_RING_BUFFER_TESTS_OK'
 Write-Output 'PROJECT_LAYOUT_TESTS_OK'

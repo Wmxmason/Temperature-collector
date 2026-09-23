@@ -2,8 +2,8 @@
 #define COLLECTOR_APP_H
 
 /**
- * @brief 采集器主任务入口
+ * @brief 创建采集器RF接收和RS485上传任务
  */
-void *collector_app_main(void *argument);
+void collector_app_start(void);
 
 #endif

@@ -12,7 +12,7 @@
 - 广播请求为 `FF FF FF 00 41 F0`，其中功能码为 `0xFF`、备用字段为0，CRC仅覆盖4字节数据域、低字节在前。
 - 每次广播结束后立即转为接收，并持续接收、转发RF帧，直到下一次30秒广播时刻。
 - RF负载被视为已经组好的完整二进制业务帧，采集器不解析温度、不修改字段、不重新计算CRC。
-- 收到的RF负载按原长度、原字节顺序直接通过RS485发送给PC。
+- RF接收任务将收到的负载写入5帧Ring Buffer，RS485上传任务按原长度、原字节顺序发送给PC。
 - PC只需要被动监听，不需要向采集器发送Modbus查询。
 - 接收超时不上传数据，也不会重复发送上一轮的历史帧。
 - RF发送/接收失败、非法长度或UART发送失败只丢弃当前周期，采集任务继续运行。
@@ -57,3 +57,4 @@ targetConfigs/ CCS调试目标配置
 - `collector_forwarded_count`：成功转发帧数
 - `collector_rf_error_count`：RF接收或长度异常次数
 - `collector_rs485_error_count`：RS485发送失败次数
+- `collector_ring_overflow_count`：Ring Buffer已满时丢弃的RF帧数
